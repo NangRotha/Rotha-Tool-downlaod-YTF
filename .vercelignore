@@ -1,0 +1,20 @@
+# Vercel Ignore - Only upload web frontend & serverless API
+bin/
+*.exe
+*.zip
+*.dmg
+*.app
+*.app/**
+__pycache__/
+*.pyc
+downloads_history.json
+settings.json
+.DS_Store
+*.command
+*.bat
+*.ps1
+start.sh
+server.py
+downloader_cli.py
+AppIcon.icns
+README_WINDOWS.txt
