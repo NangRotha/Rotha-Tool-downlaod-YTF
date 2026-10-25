@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/static/:path*",
+      "destination": "/public/:path*"
+    },
+    {
+      "source": "/api/status",
+      "destination": "/api/status.py"
+    },
+    {
+      "source": "/api/history",
+      "destination": "/api/history.py"
+    },
+    {
+      "source": "/api/settings",
+      "destination": "/api/settings.py"
+    },
+    {
+      "source": "/api/download-installer",
+      "destination": "/api/download_installer.py"
+    },
+    {
+      "source": "/api/download-installer-win",
+      "destination": "/api/download_installer_win.py"
+    },
+    {
+      "source": "/api/fetch-info",
+      "destination": "/api/fetch_info.py"
+    },
+    {
+      "source": "/(.*\\.(css|js|png|jpg|jpeg|ico|json|svg|woff2?|ttf))",
+      "destination": "/public/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/public/index.html"
+    }
+  ]
+}

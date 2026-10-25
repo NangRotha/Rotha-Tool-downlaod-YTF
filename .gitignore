@@ -1,0 +1,43 @@
+# ==============================================================================
+# RothaDownloader - Git Ignore Configuration
+# Prevents large binary files (>100MB) from breaking GitHub push & Vercel builds
+# ==============================================================================
+
+# Large standalone binary engines (Exceed GitHub 100MB limit)
+bin/
+*.exe
+*.dmg
+*.zip
+*.app/
+*.iso
+*.tar.gz
+
+# Python runtime and compiled bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+build/
+dist/
+
+# User downloads history and local preferences
+downloads_history.json
+settings.json
+*.qt_compat.mp4
+*.part
+*.ytdl
+
+# Operating System & IDE Cache
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.idea/
+.vscode/
