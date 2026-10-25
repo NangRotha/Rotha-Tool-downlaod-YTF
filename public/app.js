@@ -798,32 +798,36 @@ async function fetchVideoInfo() {
 }
 
 function renderVideoDetails(info) {
+  if (!info) return;
+
   videoThumbnail.src = info.thumbnail || "";
   videoDuration.textContent = formatNumber(info.duration_formatted || "--:--");
   videoTitle.textContent = info.title || "Video";
   authorName.textContent = info.uploader || "Unknown";
 
-  const platformName = info.platform.toUpperCase();
+  const rawPlatform = (info.platform || "video").toLowerCase();
+  const platformName = rawPlatform.toUpperCase();
   platformBadge.textContent = platformName;
-  if (info.platform === "youtube") {
+  if (rawPlatform === "youtube") {
     platformBadge.style.background = "#ff0033";
-  } else if (info.platform === "tiktok") {
+  } else if (rawPlatform === "tiktok") {
     platformBadge.style.background = "linear-gradient(135deg, #00f2fe, #fe0979)";
-  } else if (info.platform === "facebook") {
+  } else if (rawPlatform === "facebook") {
     platformBadge.style.background = "#1877f2";
   } else {
     platformBadge.style.background = "#6366f1";
   }
 
-  if (info.max_height >= 2160) {
+  const maxHeight = info.max_height || 1080;
+  if (maxHeight >= 2160) {
     maxResBadge.textContent = currentLang === "km" ? "៤K Ultra HD ✨" : "4K Ultra HD ✨";
     maxResBadge.style.background = "rgba(245, 158, 11, 0.2)";
     maxResBadge.style.color = "#fbbf24";
-  } else if (info.max_height >= 1080) {
+  } else if (maxHeight >= 1080) {
     maxResBadge.textContent = currentLang === "km" ? "១០៨០p Full HD 💎" : "1080p Full HD 💎";
     maxResBadge.style.background = "rgba(16, 185, 129, 0.2)";
     maxResBadge.style.color = "#34d399";
-  } else if (info.max_height >= 720) {
+  } else if (maxHeight >= 720) {
     maxResBadge.textContent = currentLang === "km" ? "៧២០p HD" : "720p HD";
     maxResBadge.style.background = "rgba(56, 189, 248, 0.2)";
     maxResBadge.style.color = "#38bdf8";
@@ -837,7 +841,15 @@ function renderVideoDetails(info) {
   qualityGrid.innerHTML = "";
   let defaultSet = false;
 
-  info.quality_options.forEach((opt, idx) => {
+  const qualityOptions = (info.quality_options && Array.isArray(info.quality_options) && info.quality_options.length > 0)
+    ? info.quality_options
+    : [
+        { id: "1080p", label: "Full HD (1080p)", resolution: "1920x1080", badge: "1080p FHD" },
+        { id: "720p", label: "HD (720p)", resolution: "1280x720", badge: "720p HD" },
+        { id: "mp3", label: "Audio Only (MP3 320kbps)", resolution: "Audio", badge: "MP3" }
+      ];
+
+  qualityOptions.forEach((opt, idx) => {
     const pill = document.createElement("div");
     pill.className = "quality-pill";
     pill.dataset.qualityId = opt.id;
@@ -857,7 +869,7 @@ function renderVideoDetails(info) {
       <div class="pill-res">${resFormatted}</div>
     `;
 
-    if (!defaultSet && (opt.id === "1080p" || (!info.quality_options.some(q => q.id === "1080p") && idx === 0))) {
+    if (!defaultSet && (opt.id === "1080p" || (!qualityOptions.some(q => q.id === "1080p") && idx === 0))) {
       pill.classList.add("active");
       selectedQuality = opt.id;
       defaultSet = true;
@@ -873,9 +885,11 @@ function renderVideoDetails(info) {
     qualityGrid.appendChild(pill);
   });
 
-  if (!defaultSet && info.quality_options.length > 0) {
-    qualityGrid.children[0].classList.add("active");
-    selectedQuality = info.quality_options[0].id;
+  if (!defaultSet && qualityOptions.length > 0) {
+    if (qualityGrid.children.length > 0) {
+      qualityGrid.children[0].classList.add("active");
+    }
+    selectedQuality = qualityOptions[0].id;
   }
 
   updateDownloadBtnText();
